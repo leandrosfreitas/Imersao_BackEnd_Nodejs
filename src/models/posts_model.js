@@ -4,11 +4,17 @@ import conectarAoBanco from "../config/dbconfig.js";
 const conexao = await conectarAoBanco(process.env.STRING_CONEXAO);
 
 // Função assíncrona para recuperar todos os posts do banco de dados
-export default async function getTodosPosts() {
+export async function getTodosPosts() {
     // Acessa o banco de dados "imersao-instabytes" e a coleção "posts"
     const db = conexao.db("imersao-instabytes");
     const colecao = db.collection("posts");
-    
     // Recupera todos os documentos da coleção e retorna como um array
     return colecao.find().toArray();
+}
+
+export async function criar_post(novo_post) {
+    // Acessa o banco de dados "imersao-instabytes" e a coleção "posts"
+    const db = conexao.db("imersao-instabytes");
+    const colecao = db.collection("posts");
+    return colecao.insertOne(novo_post);
 }
