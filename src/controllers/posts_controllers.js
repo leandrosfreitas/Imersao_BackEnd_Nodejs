@@ -1,7 +1,6 @@
 import fs from "fs"
 import gerarDescricaoComGemini from "../services/gemini_service.js";
 import { getTodosPosts, criar_post, atualizar_post } from "../models/posts_model.js";
-import { count } from "console";
 
 export async function listar_posts(req, res) {
     // Chama a função `getTodosPosts()` para buscar os posts do banco
