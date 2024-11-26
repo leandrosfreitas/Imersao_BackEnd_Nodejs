@@ -1,5 +1,7 @@
 import fs from "fs"
+import gerarDescricaoComGemini from "../services/gemini_service.js";
 import { getTodosPosts, criar_post, atualizar_post } from "../models/posts_model.js";
+import { count } from "console";
 
 export async function listar_posts(req, res) {
     // Chama a função `getTodosPosts()` para buscar os posts do banco
@@ -39,13 +41,16 @@ export async function upload_imagem(req, res) {
 export async function atualizar_novo_post(req, res) {
     const id = req.params.id;
     const urlimagem = `http://localhost:3000/${id}.png`
-    const post = {
-        imgUrl: urlimagem,
-        descricao: req.body.descricao,
-        alt: req.body.alt
-    }
     try {
+        const img_buffer = fs.readFileSync(`uploads/${id}.png`)
+        const descricao = await gerarDescricaoComGemini(img_buffer)
+        const post = {
+            imgUrl: urlimagem,
+            descricao: descricao,
+            alt: req.body.alt
+        }
         const post_criado = await atualizar_post(id, post);
+        
         res.status(200).json(post_criado);
     } catch(erro) {
         console.error(erro.message);
